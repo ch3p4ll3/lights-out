@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 
 images = []
 i = -1
+best = 0
 
 
 def start(finestra):
@@ -46,12 +47,16 @@ def off():
 
 
 def b(finestra, now, wait):
+    global best
     restart()
     btn['text'] = "Start"
     btn['command'] = lambda: countdown(finestra)
 
     tempo = round(((time.time() - now) * 1000) - wait, 3)
     if tempo > 0:
+        if tempo < best or best == 0:
+            best = tempo
+            besttime['text'] = "Miglior tempo di reazione: {}ms".format(best)
         messagebox.showinfo("GG", "Tempo di reazione: {} millisecondi".format(tempo))
     elif tempo <= 0:
         messagebox.showinfo("Fail", "Jump start!")
@@ -90,6 +95,8 @@ finestra.geometry("{}x250".format(str(j + 20)))
 
 # finestra['background'] = "white"
 
+besttime = Label(finestra, text="Miglior tempo di reazione: {}ms".format(best))
+besttime.place(x=20, y=225)
 btn = Button(finestra, text="start", command=lambda: countdown(finestra))
 btn.place(x=j / 2, y=200)
 
